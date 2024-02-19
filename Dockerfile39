@@ -1,0 +1,15 @@
+FROM python:3.9
+
+WORKDIR /src
+
+COPY ./requirements.txt /code/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+COPY ./static /src/static
+
+COPY ./main.py /src/
+
+COPY ./test_main.py /src/
+
+CMD ["python", "main.py", "--mode", "prod", "--workers", "2"]

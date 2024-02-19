@@ -1,0 +1,1 @@
+start /MAX cmd /k "cls && title CMD-VENV-310 && cd venv310/Scripts && activate && cd ../.."
