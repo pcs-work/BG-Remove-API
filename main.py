@@ -111,6 +111,8 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
                     status=201,
                     mime_type="image/*",
                 )
+            else:
+                raise SanicException(message="Invalid Return Type", status_code=400)
 
         elif infer_type == "replace":
             filename_1: str = request.files.get("file_1").name
@@ -149,6 +151,8 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
                     status=201,
                     mime_type="image/*",
                 )
+            else:
+                raise SanicException(message="Invalid Return Type", status_code=400)
 
         else:
             raise SanicException(message="Invalid Infer Type", status_code=404)
@@ -210,6 +214,8 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
                     status=201,
                     mime_type="image/*",
                 )
+            else:
+                raise SanicException(message="Invalid Return Type", status_code=400)
 
         elif infer_type == "replace":
             filename_1: str = request.files.get("file_1").name
@@ -248,6 +254,8 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
                     status=201,
                     mime_type="image/*",
                 )
+            else:
+                raise SanicException(message="Invalid Return Type", status_code=400)
 
         else:
             raise SanicException(message="Invalid Infer Type", status_code=404)
