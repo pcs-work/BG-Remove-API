@@ -32,7 +32,7 @@ class Model(object):
             providers=["AzureExecutionProvider", "CPUExecutionProvider"]
         )
     
-    def infer(self, image: np.ndarray) -> np.ndarray:
+    async def infer(self, image: np.ndarray) -> np.ndarray:
         h, w, _ = image.shape
 
         image = image / 255
