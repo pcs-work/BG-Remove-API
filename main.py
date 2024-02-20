@@ -88,7 +88,7 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
 
             image = Processor().decode_image(request.files.get("file").body)
 
-            mask = Model().infer(image=image)
+            mask = await Model().infer(image=image)
             for i in range(3):
                 image[:, :, i] = image[:, :, i] & mask
 
@@ -121,7 +121,7 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
             image_1 = Processor.decode_image(request.files.get("file_1").body)
             image_2 = Processor.decode_image(request.files.get("file_2").body)
 
-            mask = Model().infer(image=image_1)
+            mask = await Model().infer(image=image_1)
             mh, mw = mask.shape
             image_2 = Processor.preprocess_replace_bg_image(image_2, mw, mh)
 
@@ -191,7 +191,7 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
 
             image = Processor.decode_image(request.files.get("file").body)
 
-            mask = Model(lightweight=True).infer(image=image)
+            mask = await Model(lightweight=True).infer(image=image)
             for i in range(3):
                 image[:, :, i] = image[:, :, i] & mask
 
@@ -224,7 +224,7 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
             image_1 = Processor.decode_image(request.files.get("file_1").body)
             image_2 = Processor.decode_image(request.files.get("file_2").body)
 
-            mask = Model(lightweight=True).infer(image=image_1)
+            mask = await Model(lightweight=True).infer(image=image_1)
             mh, mw = mask.shape
             image_2 = Processor.preprocess_replace_bg_image(image_2, mw, mh)
 
