@@ -33,7 +33,7 @@ async def clean(request: Request) -> JSONResponse:
     """
     BASH
 
-        curl -X GET "http://localhost:9090/clean" -s
+        curl -X GET "<BASE_URL>/clean" -s
 
     """
 
@@ -61,10 +61,10 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
     """
     BASH
 
-        curl -X POST -L "http://localhost:9090/remove?rtype=json" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.json"
-        curl -X POST -L "http://localhost:9090/remove?rtype=file" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.file"
-        curl -X POST -L "http://localhost:9090/replace?rtype=json" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.json"
-        curl -X POST -L "http://localhost:9090/replace?rtype=file" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.png"
+        curl -X POST -L "<BASE_URL>/remove?rtype=json" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.json"
+        curl -X POST -L "<BASE_URL>/remove?rtype=file" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.file"
+        curl -X POST -L "<BASE_URL>/replace?rtype=json" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.json"
+        curl -X POST -L "<BASE_URL>/replace?rtype=file" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.png"
 
     """
 
@@ -84,6 +84,12 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
             raise SanicException(message="No return type specified", status_code=400)
 
         if infer_type == "remove":
+            if request.files.get("file", None) is None:
+                return JSONResponse(
+                    body={"statusText": "Invalid Key Specified for file Upload"},
+                    status=400,
+                )
+            
             filename: str = request.files.get("file").name
 
             image = Processor().decode_image(request.files.get("file").body)
@@ -112,9 +118,20 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
                     mime_type="image/*",
                 )
             else:
-                raise SanicException(message="Invalid Return Type", status_code=400)
+                return JSONResponse(
+                    body={
+                        "statusText": "Invalid Return Type"
+                    },
+                    status=400
+                )
 
         elif infer_type == "replace":
+            if request.files.get("file_1", None) is None or request.files.get("file_2", None) is None:
+                return JSONResponse(
+                    body={"statusText": "Invalid Key Specified for file Upload"},
+                    status=400,
+                )
+            
             filename_1: str = request.files.get("file_1").name
             filename_2: str = request.files.get("file_2").name
 
@@ -152,10 +169,20 @@ async def processing(request: Request, infer_type: str) -> JSONResponse:
                     mime_type="image/*",
                 )
             else:
-                raise SanicException(message="Invalid Return Type", status_code=400)
+                return JSONResponse(
+                    body={
+                        "statusText": "Invalid Return Type"
+                    },
+                    status=400
+                )
 
         else:
-            raise SanicException(message="Invalid Infer Type", status_code=404)
+            return JSONResponse(
+                body={
+                    "statusText": "Invalid infer Type"
+                },
+                status=400
+            )
 
 
 @app.route("/<infer_type:str>/li", methods=["GET", "POST"])
@@ -163,10 +190,10 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
     """
     BASH
 
-        curl -X POST -L "http://localhost:9090/remove/li?rtype=json" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.json"
-        curl -X POST -L "http://localhost:9090/remove/li?rtype=file" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.file"
-        curl -X POST -L "http://localhost:9090/replace/li?rtype=json" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.json"
-        curl -X POST -L "http://localhost:9090/replace/li?rtype=file" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.png"
+        curl -X POST -L "<BASE_URL>/remove/li?rtype=json" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.json"
+        curl -X POST -L "<BASE_URL>/remove/li?rtype=file" -F file=@"/<PATH>/img1.png" -o "<PATH>/temp.file"
+        curl -X POST -L "<BASE_URL>/replace/li?rtype=json" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.json"
+        curl -X POST -L "<BASE_URL>/replace/li?rtype=file" -F file_1=@"/<PATH>/img1.png" -F file_2=@"/<PATH>/img2.png" -o "<PATH>/temp.png"
 
     """
 
@@ -187,6 +214,12 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
             raise SanicException(message="No return type specified", status_code=400)
 
         if infer_type == "remove":
+            if request.files.get("file", None) is None:
+                return JSONResponse(
+                    body={"statusText": "Invalid Key Specified for file Upload"},
+                    status=400,
+                )
+
             filename: str = request.files.get("file").name
 
             image = Processor.decode_image(request.files.get("file").body)
@@ -215,9 +248,20 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
                     mime_type="image/*",
                 )
             else:
-                raise SanicException(message="Invalid Return Type", status_code=400)
+                return JSONResponse(
+                    body={
+                        "statusText": "Invalid Return Type"
+                    },
+                    status=400
+                )
 
         elif infer_type == "replace":
+            if request.files.get("file_1", None) is None or request.files.get("file_2", None) is None:
+                return JSONResponse(
+                    body={"statusText": "Invalid Key Specified for file Upload"},
+                    status=400,
+                )
+
             filename_1: str = request.files.get("file_1").name
             filename_2: str = request.files.get("file_2").name
 
@@ -255,10 +299,19 @@ async def processing_li(request: Request, infer_type: str) -> JSONResponse:
                     mime_type="image/*",
                 )
             else:
-                raise SanicException(message="Invalid Return Type", status_code=400)
-
+                return JSONResponse(
+                    body={
+                        "statusText": "Invalid Return Type"
+                    },
+                    status=400
+                )
         else:
-            raise SanicException(message="Invalid Infer Type", status_code=404)
+            return JSONResponse(
+                body={
+                    "statusText": "Invalid Infer Type"
+                },
+                status=400
+            )
 
 
 if __name__ == "__main__":

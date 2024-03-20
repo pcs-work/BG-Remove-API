@@ -56,7 +56,7 @@ class Processor:
         header: str = "data:image/png;base64", image: np.ndarray = None
     ) -> str:
         image = cv2.cvtColor(src=image, code=cv2.COLOR_RGB2BGR)
-        _, imageData = cv2.imencode(".jpeg", image)
+        _, imageData = cv2.imencode(".png", image)
         imageData = base64.b64encode(imageData)
         imageData = str(imageData).replace("b'", "").replace("'", "")
         imageData = header + "," + imageData
